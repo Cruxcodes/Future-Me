@@ -1,10 +1,16 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
+// import 'package:fluttertoast/fluttertoast.dart';
 import 'package:future_me/components/app_text_field.dart';
 import 'package:future_me/components/shared/box_shadow.dart';
 import 'package:future_me/components/shared/colors.dart';
+import 'package:future_me/model/UserModel.dart';
 import 'package:future_me/services/auth.dart';
 import 'package:go_router/go_router.dart';
+import 'package:in_app_notification/in_app_notification.dart';
+
+import '../components/shared/show_toast.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -15,7 +21,6 @@ class LoginView extends StatefulWidget {
 
 class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
-  String text = "tHIS SI A TEST";
   late TextEditingController _usernameController = TextEditingController();
   late TextEditingController _passwordController = TextEditingController();
   AuthService _authService = new AuthService();
@@ -78,15 +83,15 @@ class _LoginViewState extends State<LoginView> {
                         borderRadius: BorderRadius.circular(20)),
                     width: width * 0.9,
                     child: AppTXTField(
-                        controller: _passwordController,
-                        hintMessage: "********",
-                        obscure: true,
-                        icon: Icon(
-                          Icons.lock,
-                          color: Colors.white,
-                        )),
+                      controller: _passwordController,
+                      hintMessage: "********",
+                      obscure: true,
+                      icon: Icon(
+                        Icons.lock,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
-                  Text(text),
                   SizedBox(
                     height: 30,
                   ),
@@ -94,21 +99,27 @@ class _LoginViewState extends State<LoginView> {
                     style: TextButton.styleFrom(backgroundColor: Colors.white),
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        try{
+                        try {
                           var data =
-                          await _authService.signInWithEmailAndPassword(
-                              _usernameController.text,
-                              _passwordController.text);
-
+                              await _authService.signInWithEmailAndPassword(
+                                  _usernameController.text,
+                                  _passwordController.text);
                           print(data);
-
-                        }catch(e){
+                          UserModel userModel = UserModel(
+                              displayName: data.user!.displayName.toString(),
+                              email: data.user!.email,
+                              uid: data.user!.uid);
+                          print(userModel.uid);
+                        } catch (e) {
+                          InAppNotification.show(
+                            child: showToast(
+                                msg: "Authentication failed, please try again"),
+                            context: context,
+                            duration: Duration(milliseconds: 2000),
+                            onTap: () => print('Notification tapped!'),
+                          );
                           print("Error $e");
                         }
-
-                        // setState(() {
-                        //   text = _usernameController.text;
-                        // });
                       }
                     },
                     child: Container(

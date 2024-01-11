@@ -1,4 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:future_me/model/AuthError.dart';
+import 'package:future_me/model/UserModel.dart';
 
 class AuthService {
   FirebaseAuth _auth = FirebaseAuth.instance;

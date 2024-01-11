@@ -41,8 +41,14 @@ class _AppTXTFieldState extends State<AppTXTField> {
         suffixIcon: widget.obscure
             ? IconButton(
                 icon: _isObscured
-                    ? Icon(Icons.visibility)
-                    : Icon(Icons.visibility_off),
+                    ? Icon(
+                        Icons.visibility,
+                        color: Colors.white,
+                      )
+                    : Icon(
+                        Icons.visibility_off,
+                        color: Colors.white,
+                      ),
                 onPressed: () {
                   setState(() {
                     _isObscured = !_isObscured;
@@ -55,7 +61,7 @@ class _AppTXTFieldState extends State<AppTXTField> {
         errorBorder: InputBorder.none,
         disabledBorder: InputBorder.none,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-        hintText: 'Username',
+        hintText: widget.hintMessage,
         hintStyle: TextStyle(
           color: Colors.white70,
         ),
