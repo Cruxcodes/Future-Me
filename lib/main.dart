@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:future_me/views/SplashScreen.dart';
+import 'package:future_me/views/bored_page.dart';
 import 'package:future_me/views/homepage.dart';
 import 'package:future_me/views/login_view.dart';
 import 'package:future_me/views/register.dart';
@@ -24,8 +25,12 @@ final _router = GoRouter(
       builder: (context, state) => RegisterPage(),
     ),
     GoRoute(
-      path: '/',
+      path: '/homepage',
       builder: (context, state) => HomePage(),
+    ),
+    GoRoute(
+      path: '/',
+      builder: (context, state) => BoredPage(),
     ),
   ],
 );
