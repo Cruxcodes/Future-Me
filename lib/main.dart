@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:future_me/views/SplashScreen.dart';
 import 'package:future_me/views/bored_page.dart';
 import 'package:future_me/views/homepage.dart';
@@ -7,40 +9,28 @@ import 'package:future_me/views/register.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:go_router/go_router.dart';
 import 'package:in_app_notification/in_app_notification.dart';
+import 'constants/routes.dart';
 import 'firebase_options.dart';
 
+
 // GoRouter configuration
-final _router = GoRouter(
-  routes: [
-    GoRoute(
-      path: '/splash',
-      builder: (context, state) => SplashPage(),
-    ),
-    GoRoute(
-      path: '/login',
-      builder: (context, state) => LoginView(),
-    ),
-    GoRoute(
-      path: "/register",
-      builder: (context, state) => RegisterPage(),
-    ),
-    GoRoute(
-      path: '/homepage',
-      builder: (context, state) => HomePage(),
-    ),
-    GoRoute(
-      path: '/',
-      builder: (context, state) => BoredPage(),
-    ),
-  ],
-);
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  // runApp(const MyApp());
+  runApp(
+    ProviderScope(
+      child: ScreenUtilInit(
+        builder: (BuildContext context, Widget? child) {
+          return MyApp();
+        },
+        designSize: const Size(360, 640),
+      ),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -53,7 +43,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
-        theme : ThemeData(
+        theme: ThemeData(
           // This is the theme of your application.
           //
           // TRY THIS: Try running your application with "flutter run". You'll see
@@ -73,7 +63,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         // home: LoginView(),
-        routerConfig: _router,
+        routerConfig: router,
       ),
     );
   }
