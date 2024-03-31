@@ -31,8 +31,10 @@ final router = GoRouter(
       builder: (context, state) => BoredPage(),
     ),
     GoRoute(
-      path: '/bored/just_me',
-      builder: (context, state) => JustMeActivity(),
+      path: '/bored/just_me/:participants',
+      builder: (context, state) => JustMeActivity(
+        participants: int.parse(state.pathParameters['participants']!),
+      ),
     ),
     GoRoute(
       path: '/bored/with_friends',

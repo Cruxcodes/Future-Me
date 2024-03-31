@@ -3,13 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:future_me/constants/colors.dart';
 import 'package:future_me/model/BoredApi.dart';
 import 'package:future_me/services/bored_api_services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../shared/colors.dart';
+
 class JustMeActivity extends ConsumerStatefulWidget {
-  const JustMeActivity({Key? key}) : super(key: key);
+  const JustMeActivity({Key? key, required this.participants})
+      : super(key: key);
+
+  final int participants;
 
   @override
   ConsumerState<JustMeActivity> createState() => _JustMeActivityState();
@@ -18,7 +22,7 @@ class JustMeActivity extends ConsumerStatefulWidget {
 class _JustMeActivityState extends ConsumerState<JustMeActivity> {
   @override
   Widget build(BuildContext context) {
-    final AsyncValue<BoredApi?> task = ref.watch(getSingleActivity);
+    final AsyncValue<BoredApi?> task = ref.watch(getSingleActivity(1));
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -68,7 +72,9 @@ class _JustMeActivityState extends ConsumerState<JustMeActivity> {
                 );
               }),
               InkWell(
-                onTap: (){ref.refresh(getSingleActivity);},
+                onTap: () {
+                  ref.refresh(getSingleActivity(1));
+                },
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 35),
                   decoration: BoxDecoration(

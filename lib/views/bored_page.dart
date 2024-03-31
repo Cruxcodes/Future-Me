@@ -47,7 +47,7 @@ class _BoredPageState extends State<BoredPage> {
               ActivityType(
                 activityType: "Just For Me",
                 activityTap: () {
-                  context.push("/bored/just_me");
+                  context.push("/bored/just_me/1");
                 },
               ),
               SizedBox(
