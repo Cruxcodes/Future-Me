@@ -7,6 +7,8 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:in_app_notification/in_app_notification.dart';
 
+import '../btn.dart';
+
 // import '../../constants/colors.dart';
 
 class FriendActivity extends ConsumerStatefulWidget {
@@ -22,8 +24,8 @@ class _FriendActivityState extends ConsumerState<FriendActivity> {
   handleSubmit() {
     if (int.parse(participants.value.text) <= 5) {
       context.push("/bored/just_me/${int.parse(participants.value.text)}");
-    }else{
-      showErrorDialog(context, "errorMessage");
+    } else {
+      showErrorDialog(context, "Number of friends must be lower than 5");
     }
   }
 
@@ -126,29 +128,7 @@ class _FriendActivityState extends ConsumerState<FriendActivity> {
             InkWell(
               onTap: handleSubmit,
               // onTap: (){ref.refresh(getSingleActivity);},
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 45),
-                decoration: BoxDecoration(
-                  color: brightRed,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
-                      offset: Offset(0, 6),
-                      blurRadius: 5,
-                    )
-                  ],
-                ),
-                child: Text(
-                  "Get Activity",
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+              child: BTN(text: "Get Activity"),
             )
           ],
         ),
@@ -156,7 +136,6 @@ class _FriendActivityState extends ConsumerState<FriendActivity> {
     );
   }
 }
-
 
 
 void showErrorDialog(BuildContext context, String errorMessage) {

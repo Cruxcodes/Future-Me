@@ -22,7 +22,8 @@ class JustMeActivity extends ConsumerStatefulWidget {
 class _JustMeActivityState extends ConsumerState<JustMeActivity> {
   @override
   Widget build(BuildContext context) {
-    final AsyncValue<BoredApi?> task = ref.watch(getSingleActivity(1));
+    final AsyncValue<BoredApi?> task =
+        ref.watch(getSingleActivity(widget.participants ?? 1));
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -73,7 +74,7 @@ class _JustMeActivityState extends ConsumerState<JustMeActivity> {
               }),
               InkWell(
                 onTap: () {
-                  ref.refresh(getSingleActivity(1));
+                  ref.refresh(getSingleActivity(widget.participants ?? 1));
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 35),

@@ -1,5 +1,6 @@
 import 'package:future_me/components/bored_activities/just_me_activity.dart';
 import 'package:future_me/components/bored_activities/with_friends.dart';
+import 'package:future_me/views/create_future.dart';
 import 'package:go_router/go_router.dart';
 
 import '../views/SplashScreen.dart';
@@ -23,11 +24,15 @@ final router = GoRouter(
       builder: (context, state) => RegisterPage(),
     ),
     GoRoute(
+      path: "/",
+      builder: (context, state) => CreateFuture(),
+    ),
+    GoRoute(
       path: '/homepage',
       builder: (context, state) => HomePage(),
     ),
     GoRoute(
-      path: '/',
+      path: '/bored ',
       builder: (context, state) => BoredPage(),
     ),
     GoRoute(
