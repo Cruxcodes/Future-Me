@@ -39,7 +39,6 @@ class _CreateFutureState extends ConsumerState<CreateFuture> {
     // TODO: implement initState
     super.initState();
     futureWantNode = FocusNode();
-    if (ref.read(futureModelProvider.notifier).state.timeSpan != null) {}
   }
 
   @override
@@ -50,12 +49,19 @@ class _CreateFutureState extends ConsumerState<CreateFuture> {
   }
 
   handleSubmit() {
-    if (futureWant.text.isEmpty || taskCount.text.isEmpty) {
-      showErrorDialog(
-          context, "Please make sure all the required fields are filled");
-    } else {
-      //This is where you run the chatGpt code
-    }
+    // if (futureWant.text.isEmpty || taskCount.text.isEmpty) {
+    //   showErrorDialog(
+    //       context, "Please make sure all the required fields are filled");
+    // } else {
+    //   final futureModel = ref.read(futureModelProvider.notifier).state;
+    //   futureModel.timeSpan = timeFrame.text;
+    //   futureModel.taskCount = taskCount.text;
+    //   futureModel.futureWant = futureWant.text;
+    //
+    //   context.push("/tasks");
+    //   //This is where you run the chatGpt code
+    // }
+    context.push("/tasks");
   }
 
   @override

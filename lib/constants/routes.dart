@@ -1,5 +1,6 @@
 import 'package:future_me/components/bored_activities/just_me_activity.dart';
 import 'package:future_me/components/bored_activities/with_friends.dart';
+import 'package:future_me/views/chat_response.dart';
 import 'package:future_me/views/create_future.dart';
 import 'package:go_router/go_router.dart';
 
@@ -34,6 +35,10 @@ final router = GoRouter(
     GoRoute(
       path: '/bored ',
       builder: (context, state) => BoredPage(),
+    ),
+    GoRoute(
+      path: '/tasks',
+      builder: (context, state) => ChatResponse(),
     ),
     GoRoute(
       path: '/bored/just_me/:participants',

@@ -168,3 +168,33 @@ void showErrorDialog(BuildContext context, String errorMessage) {
     onTap: () => print('Notification tapped!'),
   );
 }
+void showSuccessDialog(BuildContext context, String errorMessage) {
+  InAppNotification.show(
+    child: Center(
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.9,
+        child: Center(
+          child: Text(
+            textAlign: TextAlign.center,
+            errorMessage,
+            style: GoogleFonts.poppins(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        padding: EdgeInsets.all(10),
+        margin: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(
+            Radius.circular(20),
+          ),
+          color: Color(0xff35D261).withOpacity(0.85),
+        ),
+      ),
+    ),
+    context: context,
+    duration: Duration(seconds: 2),
+    onTap: () => print('Notification tapped!'),
+  );
+}
