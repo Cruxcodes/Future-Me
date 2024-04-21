@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:future_me/components/bored_activities/with_friends.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,14 +10,24 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../components/btn.dart';
 
-class CreateFuture extends StatefulWidget {
+class FutureModel {
+  String? futureWant;
+  String? timeSpan;
+  String? taskCount;
+
+  FutureModel({this.futureWant, this.timeSpan, this.taskCount});
+}
+
+final futureModelProvider = StateProvider((ref) => FutureModel());
+
+class CreateFuture extends ConsumerStatefulWidget {
   const CreateFuture({Key? key}) : super(key: key);
 
   @override
-  State<CreateFuture> createState() => _CreateFutureState();
+  ConsumerState<CreateFuture> createState() => _CreateFutureState();
 }
 
-class _CreateFutureState extends State<CreateFuture> {
+class _CreateFutureState extends ConsumerState<CreateFuture> {
   TextEditingController futureWant = TextEditingController();
   TextEditingController timeFrame = TextEditingController();
   TextEditingController taskCount = TextEditingController();
@@ -28,6 +39,7 @@ class _CreateFutureState extends State<CreateFuture> {
     // TODO: implement initState
     super.initState();
     futureWantNode = FocusNode();
+    if (ref.read(futureModelProvider.notifier).state.timeSpan != null) {}
   }
 
   @override
@@ -39,7 +51,8 @@ class _CreateFutureState extends State<CreateFuture> {
 
   handleSubmit() {
     if (futureWant.text.isEmpty || taskCount.text.isEmpty) {
-      showErrorDialog(context, "Please input all the required fields");
+      showErrorDialog(
+          context, "Please make sure all the required fields are filled");
     } else {
       //This is where you run the chatGpt code
     }
@@ -51,77 +64,47 @@ class _CreateFutureState extends State<CreateFuture> {
       backgroundColor: Colors.white,
       body: SafeArea(
         bottom: false,
-        // child: Container(
-        //   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        //   decoration: BoxDecoration(
-        //     color: Colors.white,
-        //   ),
-        //   child: Center(
-        //     child: Form(
-        //       key: key,
-        //       child: SingleChildScrollView(
-        //         child: Center(
-        //           child: Column(
-        //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        //             children: [
-        //               InputAndLabel(
-        //                   controller: futureWant,
-        //                   labelText:
-        //                       "Hello, what is the goal you  want to achieve?",
-        //                   prefixText: "I want to "),
-        //               SizedBox(
-        //                 height: 20,
-        //               ),
-        //               InputAndLabel(
-        //                   controller: timeFrame,
-        //                   labelText: "How long do you plan to pursue this?",
-        //                   prefixText: "For "),
-        //               SizedBox(
-        //                 height: 20,
-        //               ),
-        //
-        //               InputAndLabel(
-        //                   controller: taskCount,
-        //                   labelText: "How many tasks can you do a day",
-        //                   prefixText: "I can do "),
-        //               SizedBox(
-        //                 height: 30,
-        //               ),
-        //               InkWell(onTap: handleSubmit, child: BTN(text: "Next")),
-        //             ],
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        // ),
-        child: Center(
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-            height: 450,
-            // width: 200,
-            child: SfDateRangePicker(
-              onSubmit: (value) {
-                if (value != null) {
-                  final nowDate = DateTime.now();
-                  final endDate = value as DateTime;
-                  final differenceInValue = endDate.difference(nowDate).inDays +
-                      1; //Add one so the last date is selected
-                }
-                //This returns date
-              },
-              headerStyle: DateRangePickerHeaderStyle(
-                  textStyle: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w500,
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+          ),
+          child: Center(
+            child: Form(
+              key: key,
+              child: SingleChildScrollView(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      InputAndLabel(
+                          controller: futureWant,
+                          labelText:
+                              "Hello, what is the goal you  want to achieve?",
+                          prefixText: "I want to "),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      InputAndLabel(
+                          controller: timeFrame,
+                          time: true,
+                          labelText: "How long do you plan to pursue this?",
+                          prefixText: "For "),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      InputAndLabel(
+                          controller: taskCount,
+                          labelText: "How many tasks can you do a day",
+                          prefixText: "I can do "),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      InkWell(onTap: handleSubmit, child: BTN(text: "Next")),
+                    ],
                   ),
-                  textAlign: TextAlign.center),
-              // backgroundColor: Colors.red,
-              onCancel: () {
-                context.pop();
-              },
-              showActionButtons: true,
-              view: DateRangePickerView.month,
-              // initialDisplayDate: DateTime.now(),
+                ),
+              ),
             ),
           ),
         ),
@@ -135,11 +118,13 @@ class InputAndLabel extends StatelessWidget {
       {super.key,
       required this.controller,
       required this.labelText,
+      this.time = false,
       required this.prefixText});
 
   final TextEditingController controller;
   final String labelText;
   final String prefixText;
+  final bool time;
 
   @override
   Widget build(BuildContext context) {
@@ -150,9 +135,21 @@ class InputAndLabel extends StatelessWidget {
           Text(
             labelText,
             textAlign: TextAlign.center,
-            style:
-                GoogleFonts.poppins(fontSize: 18.sp, color: Color(0xff5B5B5B)),
+            style: GoogleFonts.poppins(
+              fontSize: 18.sp,
+              color: Color(0xff5B5B5B),
+            ),
           ),
+          time
+              ? Text(
+                  "Please specify : years, months, days",
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.normal,
+                    fontSize: 12.sp,
+                    color: Colors.black45
+                  ),
+                )
+              : SizedBox.shrink(),
           SizedBox(
             height: 15,
           ),
