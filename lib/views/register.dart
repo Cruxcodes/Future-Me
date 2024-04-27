@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:future_me/services/auth.dart';
+import 'package:go_router/go_router.dart';
 
 import '../components/app_text_field.dart';
 import '../components/shared/box_shadow.dart';
@@ -162,6 +163,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   print(
                                       'User created with username: ${user.displayName}');
                                   print('Email: ${user.email}');
+                                  context.go("/login");
                                   // Any additional operations after successful user creation
                                 }).catchError((error) {
                                   // Handle errors while updating the username

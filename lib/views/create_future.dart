@@ -46,68 +46,79 @@ class _CreateFutureState extends ConsumerState<CreateFuture> {
     // TODO: implement dispose
     super.dispose();
     futureWantNode.dispose();
+    timeFrame.dispose();
+    taskCount.dispose();
+  }
+
+  disposeProvider() {
+    ref.invalidate(futureModelProvider);
   }
 
   handleSubmit() {
-    // if (futureWant.text.isEmpty || taskCount.text.isEmpty) {
-    //   showErrorDialog(
-    //       context, "Please make sure all the required fields are filled");
-    // } else {
-    //   final futureModel = ref.read(futureModelProvider.notifier).state;
-    //   futureModel.timeSpan = timeFrame.text;
-    //   futureModel.taskCount = taskCount.text;
-    //   futureModel.futureWant = futureWant.text;
-    //
-    //   context.push("/tasks");
-    //   //This is where you run the chatGpt code
-    // }
-    context.push("/tasks");
+    if (futureWant.text.isEmpty || taskCount.text.isEmpty) {
+      showErrorDialog(
+          context, "Please make sure all the required fields are filled");
+    } else {
+      final futureModel = ref.read(futureModelProvider.notifier).state;
+      futureModel.timeSpan = timeFrame.text;
+      futureModel.taskCount = taskCount.text;
+      futureModel.futureWant = futureWant.text;
+
+      context.push("/tasks");
+      //This is where you run the chatGpt code
+    }
+    // context.push("/tasks");
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        bottom: false,
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-          ),
-          child: Center(
-            child: Form(
-              key: key,
-              child: SingleChildScrollView(
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      InputAndLabel(
-                          controller: futureWant,
-                          labelText:
-                              "Hello, what is the goal you  want to achieve?",
-                          prefixText: "I want to "),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      InputAndLabel(
-                          controller: timeFrame,
-                          time: true,
-                          labelText: "How long do you plan to pursue this?",
-                          prefixText: "For "),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      InputAndLabel(
-                          controller: taskCount,
-                          labelText: "How many tasks can you do a day",
-                          prefixText: "I can do "),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      InkWell(onTap: handleSubmit, child: BTN(text: "Next")),
-                    ],
+    return WillPopScope(
+      onWillPop: () async {
+        return _onBackButtonPressed(context, disposeProvider);
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          bottom: false,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+            ),
+            child: Center(
+              child: Form(
+                key: key,
+                child: SingleChildScrollView(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InputAndLabel(
+                            controller: futureWant,
+                            labelText:
+                                "Hello, what is the goal you  want to achieve?",
+                            prefixText: "I want to "),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        InputAndLabel(
+                            controller: timeFrame,
+                            time: true,
+                            labelText: "When do you want to attain this?",
+                            prefixText: "In "),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        InputAndLabel(
+                            controller: taskCount,
+                            labelText: "How many tasks can you do a day",
+                            prefixText: "I can do "),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        InkWell(onTap: handleSubmit, child: BTN(text: "Next")),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -150,10 +161,9 @@ class InputAndLabel extends StatelessWidget {
               ? Text(
                   "Please specify : years, months, days",
                   style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.normal,
-                    fontSize: 12.sp,
-                    color: Colors.black45
-                  ),
+                      fontWeight: FontWeight.normal,
+                      fontSize: 12.sp,
+                      color: Colors.black45),
                 )
               : SizedBox.shrink(),
           SizedBox(
@@ -174,6 +184,7 @@ class InputAndLabel extends StatelessWidget {
                   color: Color(0xff7F7F7F),
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w500),
+
               contentPadding: EdgeInsets.all(6),
               border: OutlineInputBorder(),
               focusColor: Colors.black,
@@ -186,4 +197,43 @@ class InputAndLabel extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<bool> _onBackButtonPressed(
+    BuildContext context, Function()? disposeProvider) async {
+  bool? confirmLogout = await showDialog<bool>(
+    context: context,
+    builder: (BuildContext context) => AlertDialog(
+      title: Text("Are you sure you want to cancel goal?"),
+      content: Text("You would be clearing all your inputs"),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(true); // Return true for 'Yes' button
+            disposeProvider!();
+          },
+          child: const Text(
+            "Yes",
+            style: TextStyle(
+              color: Colors.black45,
+            ),
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(false); // Return false for 'No' button
+          },
+          child: const Text(
+            "No",
+            style: TextStyle(
+              color: Colors.blueAccent,
+            ),
+          ),
+        ),
+      ],
+    ),
+    barrierDismissible: true,
+  );
+
+  return confirmLogout ?? false; // Handle the case when the dialog is dismissed
 }

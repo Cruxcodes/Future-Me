@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // import 'package:fluttertoast/fluttertoast.dart';
 import 'package:future_me/components/app_text_field.dart';
@@ -12,14 +13,16 @@ import 'package:in_app_notification/in_app_notification.dart';
 
 import '../components/shared/show_toast.dart';
 
-class LoginView extends StatefulWidget {
+final userDetails = StateProvider((ref) => UserModel());
+
+class LoginView extends ConsumerStatefulWidget {
   const LoginView({Key? key}) : super(key: key);
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  ConsumerState<LoginView> createState() => _LoginViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _LoginViewState extends ConsumerState<LoginView> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _usernameController = TextEditingController();
   late TextEditingController _passwordController = TextEditingController();
@@ -110,6 +113,10 @@ class _LoginViewState extends State<LoginView> {
                               email: data.user!.email,
                               uid: data.user!.uid);
                           print(userModel.uid);
+
+                          ref.read(userDetails.notifier).state = userModel;
+
+                          context.go("/actualHome");
                         } catch (e) {
                           InAppNotification.show(
                             child: showToast(
