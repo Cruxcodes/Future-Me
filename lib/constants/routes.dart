@@ -3,6 +3,7 @@ import 'package:future_me/components/bored_activities/with_friends.dart';
 import 'package:future_me/views/chat_response.dart';
 import 'package:future_me/views/create_future.dart';
 import 'package:future_me/views/intitial_homepaege.dart';
+import 'package:future_me/views/single_task_page.dart';
 import 'package:go_router/go_router.dart';
 
 import '../views/SplashScreen.dart';
@@ -50,6 +51,12 @@ final router = GoRouter(
       path: '/bored/just_me/:participants',
       builder: (context, state) => JustMeActivity(
         participants: int.parse(state.pathParameters['participants']!),
+      ),
+    ),
+    GoRoute(
+      path: '/single_task/:taskId',
+      builder: (context, state) => FirebaseTask(
+        taskId: state.pathParameters['taskId']!,
       ),
     ),
     GoRoute(

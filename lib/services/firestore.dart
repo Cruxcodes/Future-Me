@@ -13,7 +13,6 @@ class FirestoreService {
   Future<dynamic> addGoal(Goal goal, String userId) async {
     final taskId = uuid.v4();
     final timeStamp = Timestamp.now();
-    // final userId = uid;
     try {
       await goalTitles.add({
         "user_id": userId,
@@ -37,23 +36,31 @@ class FirestoreService {
   }
 
 //Read the database values and display them in the task,save the task list and save the number of days data is saved
-  Stream<QuerySnapshot> getTasksStream() {
+  Stream<QuerySnapshot> getTasksStream(String userID) {
     final taskStream =
-        goalTitles.orderBy('time_stamp', descending: true).snapshots();
+        goalTitles.where('user_id', isEqualTo: userID).snapshots();
+        // goalTitles.where('user_id', isEqualTo: userID).orderBy('time_stamp', descending: true).snapshots();
 
     return taskStream;
   }
 
   //get particular goal
-  Future<dynamic> getGoalStream(String taskID) {
-    final taskStream = goals.where('task_id', isEqualTo: taskID).get();
+  Stream<QuerySnapshot> getGoalStream(String taskID) {
+    final taskStream = goals.where('task_id', isEqualTo: taskID).snapshots();
 
     return taskStream;
   }
 
-//Above is the update
-  Future<void> updateGoal(String docID, String newDays) async {
-    // return
+
+  Future<void> updateGoal(String docID, int newDays) async {
+    try {
+      await FirebaseFirestore.instance.collection("UserTaskList").doc(docID).update({
+        "days_done": newDays,
+      });
+      print("Days done updated successfully!");
+    } catch (ex) {
+      print("Error updating days done: $ex");
+    }
   }
 
 //Delete the task if the user says they are no longer doing

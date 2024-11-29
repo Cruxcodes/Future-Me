@@ -55,7 +55,9 @@ class _CreateFutureState extends ConsumerState<CreateFuture> {
   }
 
   handleSubmit() {
-    if (futureWant.text.isEmpty || taskCount.text.isEmpty) {
+    if (futureWant.text.isEmpty ||
+        taskCount.text.isEmpty ||
+        int.parse(taskCount.text) <= 0) {
       showErrorDialog(
           context, "Please make sure all the required fields are filled");
     } else {
@@ -184,7 +186,6 @@ class InputAndLabel extends StatelessWidget {
                   color: Color(0xff7F7F7F),
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w500),
-
               contentPadding: EdgeInsets.all(6),
               border: OutlineInputBorder(),
               focusColor: Colors.black,

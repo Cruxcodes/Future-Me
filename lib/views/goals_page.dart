@@ -5,9 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../components/shared/colors.dart';
 import '../services/firestore.dart';
+import 'login_view.dart';
 
 class Goals extends ConsumerStatefulWidget {
   const Goals({Key? key}) : super(key: key);
@@ -33,7 +33,9 @@ class _GoalsState extends ConsumerState<Goals> {
             children: [
               Text(
                 "Existing Goals",
-                style: GoogleFonts.poppins(fontSize: 16.sp),
+                style: GoogleFonts.poppins(
+                  fontSize: 16.sp,
+                ),
               ),
               SizedBox(
                 height: 10,
@@ -93,58 +95,70 @@ class _GoalsState extends ConsumerState<Goals> {
                 ),
               ),
               SizedBox(
-                height: 10,
+                height: 20,
               ),
               StreamBuilder(
-                  stream: firestoreService.getTasksStream(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      List goalList = snapshot.data!.docs;
+                stream: firestoreService.getTasksStream(ref.watch(userDetails.notifier).state.uid!),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    List goalList = snapshot.data!.docs;
 
-                      return Expanded(
-                        child: GridView.builder(
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            // Adjust this value according to your design
-                            crossAxisSpacing: 10.0,
-                            mainAxisSpacing: 10.0,
-                          ),
-                          itemCount: goalList.length,
-                          itemBuilder: (context, index) {
-                            DocumentSnapshot docSnap = goalList[index];
-                            String docID = docSnap.id;
-
-                            // Get the name from each entry
-                            Map<String, dynamic> data =
-                                docSnap.data() as Map<String, dynamic>;
-                            String goalTitle = data["task_title"];
-                            return Container(
-                              decoration: BoxDecoration(
-                                color: Colors.red,
-                              ),
-                              child: Center(
-                                child: Text(goalTitle),
-                              ),
-                            );
-                          },
+                    return Expanded(
+                      child: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          // Adjust this value according to your design
+                          crossAxisSpacing: 15.0,
+                          mainAxisSpacing: 15.0,
                         ),
-                        // ListView.builder(itemCount: goalList.length,itemBuilder: (context, index) {
-                        //   DocumentSnapshot docSnap = goalList[index];
-                        //   String docID = docSnap.id;
-                        //
-                        // //get the name from each entry
-                        //   Map<String, dynamic> data  = docSnap.data() as Map<String, dynamic>;
-                        //   String goalTitle = data["task_title"];
-                        //   return Container(child: Text(goalTitle));
-                        // }),
-                      );
+                        itemCount: goalList.length,
+                        itemBuilder: (context, index) {
+                          DocumentSnapshot docSnap = goalList[index];
+                          String docID = docSnap.id;
 
-
-                    } else {
-                      return Text("no data");
-                    }
-                  })
+                          // Get the name from each entry
+                          Map<String, dynamic> data =
+                              docSnap.data() as Map<String, dynamic>;
+                          String goalTitle = data["task_title"];
+                          return InkWell(
+                            onTap: () {
+                              context.push("/single_task/${data["task_id"]}");
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      offset: Offset(0, 2),
+                                      color: Colors.black.withOpacity(0.5),
+                                      // spreadRadius: ,
+                                      blurRadius: 10,
+                                    )
+                                  ],
+                                  color: lightOrange,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                              child: Center(
+                                child: Text(
+                                  goalTitle,
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.raleway(
+                                    fontSize: 18.sp,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  } else {
+                    return Text("no data");
+                  }
+                },
+              )
             ],
           ),
         ),

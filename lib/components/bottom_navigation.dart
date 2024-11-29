@@ -46,7 +46,7 @@ class _BottomNavigationLayoutState extends State<BottomNavigationLayout> {
               // icon: NavIcon(
               //   path: "crowd_funding",
               // ),
-              icon: Icon(Icons.add),
+              icon: Icon(Icons.home),
 
               label: 'Homepage',
             ),
@@ -54,7 +54,7 @@ class _BottomNavigationLayoutState extends State<BottomNavigationLayout> {
               // icon: NavIcon(
               //   path: "Location",
               // ),
-              icon: Icon(Icons.add),
+              icon: Icon(Icons.monitor_heart  ),
 
               label: "Goals",
             ),

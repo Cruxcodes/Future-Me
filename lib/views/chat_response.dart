@@ -106,6 +106,7 @@ class _ChatResponseState extends ConsumerState<ChatResponse> {
     }
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -169,7 +170,6 @@ class _ChatResponseState extends ConsumerState<ChatResponse> {
             ),
             InkWell(
               onTap:  () async {
-
                 setState(() {
                   isLoading = true;
                   goal.timeSpan = futureModel.timeSpan;
