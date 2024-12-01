@@ -50,6 +50,7 @@ dependencies:
   syncfusion_flutter_datepicker: ^22.2.12
   cloud_firestore: ^5.5.0
   uuid: ^4.2.2
+  win32: ^5.9.0
 
 dev_dependencies:
   flutter_test:
