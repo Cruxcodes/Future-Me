@@ -52,7 +52,7 @@ lib/
 │   ├── ai_api_call.dart       # OpenAI API integration (task generation)
 │   ├── auth.dart              # Firebase Auth sign-up / sign-in / sign-out
 │   ├── firestore.dart         # Firestore CRUD for goals & progress
-│   ├── bored_api_services.dart# BoredAPI integration
+│   ├── bored_api_services.dart # BoredAPI integration
 │   ├── quotes.dart            # Zen Quotes API integration
 │   └── user_tasks.dart        # (Placeholder for future task utilities)
 ├── views/
